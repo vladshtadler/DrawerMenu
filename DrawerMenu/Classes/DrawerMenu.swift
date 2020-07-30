@@ -18,6 +18,10 @@ public extension UIViewController {
     }
 }
 
+public protocol DrawerMenuDelegate: class {
+  func didChangeStatus(isOpen: Bool, side: DrawerMenu.Side)
+}
+
 public class DrawerMenu: UIViewController, UIGestureRecognizerDelegate {
 
     public enum PanGestureType { case pan, screenEdge, none }
@@ -54,12 +58,25 @@ public class DrawerMenu: UIViewController, UIGestureRecognizerDelegate {
             addPanGesture(type: panGestureType)
         }
     }
-    public private(set) var isOpenLeft: Bool = false
-    public private(set) var isOpenRight: Bool = false
+  public private(set) var isOpenLeft: Bool = false {
+    didSet {
+      if isOpenLeft != oldValue {
+        delegate?.didChangeStatus(isOpen: isOpenLeft, side: .left)
+      }
+    }
+  }
+  public private(set) var isOpenRight: Bool = false {
+    didSet {
+      if isOpenRight != oldValue {
+        delegate?.didChangeStatus(isOpen: isOpenRight, side: .right)
+      }
+    }
+  }
 
     public var centerViewController: UIViewController
     public var leftViewController: UIViewController?
     public var rightViewContoller: UIViewController?
+    public weak var delegate: DrawerMenuDelegate?
 
     internal var centerContainerView = UIView(frame: .zero)
     internal var leftContainerView: UIView?
