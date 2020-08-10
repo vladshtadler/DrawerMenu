@@ -72,6 +72,7 @@ public class DrawerMenu: UIViewController, UIGestureRecognizerDelegate {
       }
     }
   }
+  public var lockDirections: [Side] = []
 
     public var centerViewController: UIViewController
     public var leftViewController: UIViewController?
@@ -517,6 +518,7 @@ public class DrawerMenu: UIViewController, UIGestureRecognizerDelegate {
 
         // Swipe right
         if diff > 0 {
+          if lockDirections.contains(.right) && !isOpenLeft { return }
             if rightProgress > 0 {
                 rightMenuGestureHandle(gesture: gestureRecognizer)
             } else {
@@ -525,6 +527,7 @@ public class DrawerMenu: UIViewController, UIGestureRecognizerDelegate {
         }
         // Swipe left
         if diff < 0 {
+          if lockDirections.contains(.left) && !isOpenRight { return }
             if leftProgress > 0 {
                 leftMenuGestureHandle(gesture: gestureRecognizer)
             } else {
